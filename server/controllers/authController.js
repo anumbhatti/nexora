@@ -41,6 +41,9 @@ const registerUser = async (req, res) => {
       email: email.toLowerCase().trim(),
     });
 
+    console.log("Login email:", email);
+console.log("User found:", !!user);
+
     if (existingUser) {
       return res.status(400).json({
         success: false,
