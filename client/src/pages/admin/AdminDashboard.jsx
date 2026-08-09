@@ -22,7 +22,7 @@ function AdminDashboard() {
     try {
       setLoading(true);
 
-      const response = api.get("/api/dashboard/admin")
+      const response = await api.get("/api/dashboard/admin");
 
       if (response.data.success) {
         setDashboard(response.data.dashboard);
