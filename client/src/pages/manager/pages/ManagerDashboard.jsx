@@ -22,7 +22,7 @@ function ManagerDashboard() {
     try {
       setLoading(true);
 
-      const response = await api.get("/dashboard/manager");
+      const response = api.get("/api/dashboard/manager")
 
       if (response.data.success) {
         setDashboard(response.data.dashboard);

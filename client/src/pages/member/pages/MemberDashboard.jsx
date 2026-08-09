@@ -27,7 +27,7 @@ function MemberDashboard() {
     try {
       setLoading(true);
 
-      const response = await api.get("/dashboard/member");
+      const response = api.get("/api/dashboard/member");
 
       if (response.data.success) {
         setDashboard(response.data.dashboard);

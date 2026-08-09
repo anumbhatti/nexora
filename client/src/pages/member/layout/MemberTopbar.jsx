@@ -30,7 +30,7 @@ function MemberTopbar({ onMenuClick }) {
     try {
       setLoadingNotifications(true);
 
-      const response = await api.get("/notifications", {
+      const response = await api.get("/api/notifications", {
         params: {
           _t: Date.now(),
         },
