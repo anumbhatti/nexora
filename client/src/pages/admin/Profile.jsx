@@ -77,7 +77,7 @@ function Profile() {
        */
 
       const response = await api.patch(
-        `/users/${profile._id}`,
+  `/api/users/${profile._id}`,
         {
           name: name.trim(),
         }
@@ -143,8 +143,8 @@ function Profile() {
     try {
       setChangingPassword(true);
 
-      const response = await api.patch(
-        "/users/change-password",
+    const response = await api.patch(
+  "/api/users/change-password",
         {
           currentPassword,
           newPassword,
