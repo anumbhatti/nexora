@@ -216,7 +216,7 @@ function ManagerTopbar({ onMenuClick }) {
                     onClick={async () => {
                       try {
                         await api.patch(
-                          "/notifications/read-all"
+                          "/api/notifications/read-all"
                         );
 
                         setNotifications((prev) =>

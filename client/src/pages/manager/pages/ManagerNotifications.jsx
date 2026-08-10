@@ -118,7 +118,7 @@ function ManagerNotifications() {
   const markAllAsRead = async () => {
     try {
       await api.patch(
-        "/notifications/read-all"
+        "/api/notifications/read-all"
       );
 
       setNotifications((prev) =>

@@ -115,7 +115,7 @@ function Notifications() {
 
     try {
       const response = await api.patch(
-        "/notifications/read-all"
+        "/api/notifications/read-all"
       );
 
       if (response.data?.success) {

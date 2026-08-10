@@ -128,7 +128,7 @@ function MemberTopbar({ onMenuClick }) {
 
   const markAllAsRead = async () => {
     try {
-      await api.patch("/notifications/read-all");
+      await api.patch("/api/notifications/read-all");
 
       setNotifications((prev) =>
         prev.map((notification) => ({
