@@ -29,7 +29,7 @@ function ManagerProfile() {
     try {
       setLoading(true);
 
-      const response = await api.get("/api/users");
+      const response = await api.get("/users");
 
       if (response.data.success) {
         setUser(response.data.user);

@@ -32,7 +32,7 @@ function Profile() {
     try {
       setLoading(true);
 
-      const response = await api.get("/api/users/profile")
+      const response = await api.get("/users/profile")
 
       if (response.data.success) {
         const user = response.data.user;

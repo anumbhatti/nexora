@@ -33,7 +33,7 @@ function Topbar({ onMenuClick }) {
   try {
     setLoadingNotifications(true);
 
-    const response = await api.get("/api/notifications", {
+    const response = await api.get("/notifications", {
   params: {
     _t: Date.now(),
   },
@@ -116,7 +116,7 @@ function Topbar({ onMenuClick }) {
   const markAsRead = async (notificationId) => {
     try {
       await api.patch(
-        `/notifications/${notificationId}/read`
+        `/api/notifications/${notificationId}/read`
       );
 
       setNotifications((prev) =>

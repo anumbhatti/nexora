@@ -39,7 +39,7 @@ function Notifications() {
         setLoading(true);
       }
 
-      const response = await api.get("/api/notifications", {
+      const response = await api.get("/notifications", {
   params: {
     _t: Date.now(),
   },
@@ -85,7 +85,7 @@ function Notifications() {
   ) => {
     try {
       await api.patch(
-        `/notifications/${notificationId}/read`
+        `/api/notifications/${notificationId}/read`
       );
 
       setNotifications((prev) =>

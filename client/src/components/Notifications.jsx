@@ -69,7 +69,7 @@ function Notifications() {
       setProcessingId(id);
 
       const response = await api.patch(
-        `/notifications/${id}/read`
+        `/api/notifications/${id}/read`
       );
 
       if (response.data?.success) {
@@ -152,7 +152,7 @@ function Notifications() {
       setProcessingId(id);
 
       const response = await api.delete(
-        `/notifications/${id}`
+        `/api/notifications/${id}`
       );
 
       if (response.data?.success) {

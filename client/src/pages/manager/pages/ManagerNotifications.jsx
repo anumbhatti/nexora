@@ -28,7 +28,7 @@ function ManagerNotifications() {
       setLoading(true);
 
       const response = await api.get(
-        "/notifications",
+        "/api/notifications",
         {
           params: {
             _t: Date.now(),
@@ -86,7 +86,7 @@ function ManagerNotifications() {
   ) => {
     try {
       await api.patch(
-        `/notifications/${notificationId}/read`
+        `/api/notifications/${notificationId}/read`
       );
 
       setNotifications((prev) =>
@@ -150,7 +150,7 @@ function ManagerNotifications() {
   ) => {
     try {
       await api.delete(
-        `/notifications/${notificationId}`
+        `/api/notifications/${notificationId}`
       );
 
       setNotifications((prev) =>

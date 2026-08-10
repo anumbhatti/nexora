@@ -30,7 +30,7 @@ function MemberTopbar({ onMenuClick }) {
     try {
       setLoadingNotifications(true);
 
-      const response = await api.get("/api/notifications", {
+      const response = await api.get("/notifications", {
         params: {
           _t: Date.now(),
         },
@@ -101,7 +101,7 @@ function MemberTopbar({ onMenuClick }) {
   const markAsRead = async (notificationId) => {
     try {
       await api.patch(
-        `/notifications/${notificationId}/read`
+        `/api/notifications/${notificationId}/read`
       );
 
       setNotifications((prev) =>
@@ -128,7 +128,7 @@ function MemberTopbar({ onMenuClick }) {
 
   const markAllAsRead = async () => {
     try {
-      await api.patch("/api/notifications/read-all");
+      await api.patch("/notifications/read-all");
 
       setNotifications((prev) =>
         prev.map((notification) => ({
