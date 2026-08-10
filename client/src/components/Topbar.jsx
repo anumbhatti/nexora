@@ -144,7 +144,7 @@ function Topbar({ onMenuClick }) {
   const markAllAsRead = async () => {
     try {
       await api.patch(
-        "/api/notifications/read-all"
+        "/notifications/read-all"
       );
 
       setNotifications((prev) =>
