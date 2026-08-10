@@ -25,11 +25,11 @@ function AdminSearch() {
         setLoading(true);
 
         const [usersResponse, projectsResponse, tasksResponse] =
-          await Promise.all([
-            api.get("/api/users")
-            api.get("/projects"),
-            api.get("/tasks/admin/all"),
-          ]);
+  await Promise.all([
+    api.get("/api/users"),
+    api.get("/api/projects"),
+    api.get("/api/tasks/admin/all"),
+  ]);
 
         const usersData = usersResponse.data.users || [];
         const projectsData = projectsResponse.data.projects || [];
