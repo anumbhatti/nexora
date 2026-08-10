@@ -72,7 +72,7 @@ function Projects() {
 
   const fetchManagers = async () => {
     try {
-      const response = await api.get("/users");
+      const response = await api.get("/api/users");
 
       if (response.data.success) {
         const users = response.data.users || [];

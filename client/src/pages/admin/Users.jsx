@@ -38,7 +38,7 @@ function Users() {
     try {
       setLoading(true);
 
-      const response = await api.get("/users");
+      const response = await api.get("/api/users");
 
       if (response.data.success) {
         setUsers(response.data.users || []);

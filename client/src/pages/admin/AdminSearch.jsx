@@ -26,7 +26,7 @@ function AdminSearch() {
 
         const [usersResponse, projectsResponse, tasksResponse] =
           await Promise.all([
-            api.get("/users"),
+            api.get("/api/users")
             api.get("/projects"),
             api.get("/tasks/admin/all"),
           ]);

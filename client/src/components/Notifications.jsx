@@ -27,25 +27,30 @@ function Notifications() {
     try {
       setLoading(true);
 
-      const response = await api.get("/api/notifications");
+      const response = await api.get("/notifications", {
+        params: {
+          _t: Date.now(),
+        },
+      });
 
-      if (response.data.success) {
+      if (response.data?.success) {
         setNotifications(
-          response.data.notifications || []
+          Array.isArray(response.data.notifications)
+            ? response.data.notifications
+            : []
         );
       } else {
         setNotifications([]);
       }
     } catch (error) {
-      console.error(
-        "Fetch Notifications Error:",
-        error
-      );
+      console.error("Fetch Notifications Error:", error);
 
       toast.error(
         error?.response?.data?.message ||
           "Failed to load notifications"
       );
+
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -67,7 +72,7 @@ function Notifications() {
         `/notifications/${id}/read`
       );
 
-      if (response.data.success) {
+      if (response.data?.success) {
         setNotifications((prev) =>
           prev.map((notification) =>
             notification._id === id
@@ -113,7 +118,7 @@ function Notifications() {
         "/notifications/read-all"
       );
 
-      if (response.data.success) {
+      if (response.data?.success) {
         setNotifications((prev) =>
           prev.map((notification) => ({
             ...notification,
@@ -150,7 +155,7 @@ function Notifications() {
         `/notifications/${id}`
       );
 
-      if (response.data.success) {
+      if (response.data?.success) {
         setNotifications((prev) =>
           prev.filter(
             (notification) =>
@@ -184,43 +189,37 @@ function Notifications() {
       case "task-assigned":
         return {
           icon: FiClipboard,
-          style:
-            "bg-sky-50 text-sky-500",
+          style: "bg-sky-50 text-sky-500",
         };
 
       case "task-status":
         return {
           icon: FiCheckCircle,
-          style:
-            "bg-emerald-50 text-emerald-500",
+          style: "bg-emerald-50 text-emerald-500",
         };
 
       case "discussion":
         return {
           icon: FiMessageSquare,
-          style:
-            "bg-violet-50 text-violet-500",
+          style: "bg-violet-50 text-violet-500",
         };
 
       case "deadline":
         return {
           icon: FiClock,
-          style:
-            "bg-orange-50 text-orange-500",
+          style: "bg-orange-50 text-orange-500",
         };
 
       case "project-update":
         return {
           icon: FiFolder,
-          style:
-            "bg-indigo-50 text-indigo-500",
+          style: "bg-indigo-50 text-indigo-500",
         };
 
       default:
         return {
           icon: FiBell,
-          style:
-            "bg-slate-100 text-slate-500",
+          style: "bg-slate-100 text-slate-500",
         };
     }
   };
@@ -232,8 +231,11 @@ function Notifications() {
   const formatTime = (date) => {
     if (!date) return "";
 
-    const notificationDate =
-      new Date(date);
+    const notificationDate = new Date(date);
+
+    if (Number.isNaN(notificationDate.getTime())) {
+      return "";
+    }
 
     const now = new Date();
 
@@ -241,17 +243,10 @@ function Notifications() {
       now.getTime() -
       notificationDate.getTime();
 
-    const seconds =
-      Math.floor(difference / 1000);
-
-    const minutes =
-      Math.floor(seconds / 60);
-
-    const hours =
-      Math.floor(minutes / 60);
-
-    const days =
-      Math.floor(hours / 24);
+    const seconds = Math.floor(difference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
 
     if (seconds < 60) {
       return "Just now";
@@ -259,25 +254,19 @@ function Notifications() {
 
     if (minutes < 60) {
       return `${minutes} ${
-        minutes === 1
-          ? "minute"
-          : "minutes"
+        minutes === 1 ? "minute" : "minutes"
       } ago`;
     }
 
     if (hours < 24) {
       return `${hours} ${
-        hours === 1
-          ? "hour"
-          : "hours"
+        hours === 1 ? "hour" : "hours"
       } ago`;
     }
 
     if (days < 7) {
       return `${days} ${
-        days === 1
-          ? "day"
-          : "days"
+        days === 1 ? "day" : "days"
       } ago`;
     }
 
@@ -295,20 +284,15 @@ function Notifications() {
   // STATS
   // ======================================================
 
-  const totalNotifications =
-    notifications.length;
+  const totalNotifications = notifications.length;
 
-  const unreadNotifications =
-    notifications.filter(
-      (notification) =>
-        !notification.isRead
-    ).length;
+  const unreadNotifications = notifications.filter(
+    (notification) => !notification.isRead
+  ).length;
 
-  const readNotifications =
-    notifications.filter(
-      (notification) =>
-        notification.isRead
-    ).length;
+  const readNotifications = notifications.filter(
+    (notification) => notification.isRead
+  ).length;
 
   // ======================================================
   // LOADING
@@ -338,33 +322,30 @@ function Notifications() {
   return (
     <div className="space-y-6">
 
-      {/* ==================================================
-          HEADER
-      ================================================== */}
+      {/* HEADER */}
 
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-sky-500">
-              <FiBell size={21} />
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-sky-500">
+            <FiBell size={21} />
+          </div>
 
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">
-                Notifications
-              </h1>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">
+              Notifications
+            </h1>
 
-              <p className="mt-1 text-sm text-slate-500">
-                Stay updated with your latest activities.
-              </p>
-            </div>
+            <p className="mt-1 text-sm text-slate-500">
+              Stay updated with your latest activities.
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
 
           <button
+            type="button"
             onClick={fetchNotifications}
             className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
           >
@@ -373,6 +354,7 @@ function Notifications() {
           </button>
 
           <button
+            type="button"
             onClick={handleMarkAllAsRead}
             disabled={unreadNotifications === 0}
             className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:bg-slate-300"
@@ -382,12 +364,9 @@ function Notifications() {
           </button>
 
         </div>
-
       </div>
 
-      {/* ==================================================
-          STATS
-      ================================================== */}
+      {/* STATS */}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
 
@@ -459,9 +438,7 @@ function Notifications() {
 
       </div>
 
-      {/* ==================================================
-          NOTIFICATION LIST
-      ================================================== */}
+      {/* NOTIFICATION LIST */}
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
@@ -495,118 +472,93 @@ function Notifications() {
         ) : (
           <div className="divide-y divide-slate-100">
 
-            {notifications.map(
-              (notification) => {
-                const notificationIcon =
-                  getNotificationIcon(
-                    notification.type
-                  );
+            {notifications.map((notification) => {
+              const notificationIcon =
+                getNotificationIcon(
+                  notification.type
+                );
 
-                const Icon =
-                  notificationIcon.icon;
+              const Icon = notificationIcon.icon;
 
-                return (
-                  <div
-                    key={notification._id}
-                    className={`group flex flex-col gap-4 px-6 py-5 transition sm:flex-row sm:items-start sm:justify-between ${
-                      notification.isRead
-                        ? "bg-white hover:bg-slate-50"
-                        : "bg-sky-50/40 hover:bg-sky-50/70"
-                    }`}
-                  >
+              return (
+                <div
+                  key={notification._id}
+                  className={`group flex flex-col gap-4 px-6 py-5 transition sm:flex-row sm:items-start sm:justify-between ${
+                    notification.isRead
+                      ? "bg-white hover:bg-slate-50"
+                      : "bg-sky-50/40 hover:bg-sky-50/70"
+                  }`}
+                >
 
-                    {/* Left */}
+                  {/* Left */}
 
-                    <div className="flex min-w-0 gap-4">
+                  <div className="flex min-w-0 gap-4">
 
-                      {/* Icon */}
+                    <div
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${notificationIcon.style}`}
+                    >
+                      <Icon size={20} />
+                    </div>
 
-                      <div
-                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${notificationIcon.style}`}
-                      >
-                        <Icon size={20} />
+                    <div className="min-w-0">
+
+                      <div className="flex flex-wrap items-center gap-2">
+
+                        <h3
+                          className={`text-sm font-semibold ${
+                            notification.isRead
+                              ? "text-slate-800"
+                              : "text-slate-900"
+                          }`}
+                        >
+                          {notification.title ||
+                            "Notification"}
+                        </h3>
+
+                        {!notification.isRead && (
+                          <span className="h-2 w-2 rounded-full bg-sky-500" />
+                        )}
+
                       </div>
 
-                      {/* Content */}
+                      <p className="mt-1 text-sm leading-6 text-slate-500">
+                        {notification.message}
+                      </p>
 
-                      <div className="min-w-0">
+                      <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-400">
 
-                        <div className="flex flex-wrap items-center gap-2">
-
-                          <h3
-                            className={`text-sm font-semibold ${
-                              notification.isRead
-                                ? "text-slate-800"
-                                : "text-slate-900"
-                            }`}
-                          >
-                            {notification.title}
-                          </h3>
-
-                          {!notification.isRead && (
-                            <span className="h-2 w-2 rounded-full bg-sky-500" />
+                        <span>
+                          {formatTime(
+                            notification.createdAt
                           )}
+                        </span>
 
-                        </div>
+                        {notification.relatedProject?.name && (
+                          <>
+                            <span>•</span>
 
-                        <p className="mt-1 text-sm leading-6 text-slate-500">
-                          {notification.message}
-                        </p>
-
-                        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-400">
-
-                          <span>
-                            {formatTime(
-                              notification.createdAt
-                            )}
-                          </span>
-
-                          {notification.relatedProject?.name && (
-                            <>
-                              <span>•</span>
-
-                              <span>
-                                {
-                                  notification
-                                    .relatedProject
-                                    .name
-                                }
-                              </span>
-                            </>
-                          )}
-
-                        </div>
+                            <span>
+                              {
+                                notification.relatedProject.name
+                              }
+                            </span>
+                          </>
+                        )}
 
                       </div>
 
                     </div>
+                  </div>
 
-                    {/* Actions */}
+                  {/* Actions */}
 
-                    <div className="flex shrink-0 items-center gap-2 sm:pt-1">
+                  <div className="flex shrink-0 items-center gap-2 sm:pt-1">
 
-                      {!notification.isRead && (
-                        <button
-                          onClick={() =>
-                            handleMarkAsRead(
-                              notification._id
-                            )
-                          }
-                          disabled={
-                            processingId ===
-                            notification._id
-                          }
-                          title="Mark as read"
-                          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          <FiCheck size={14} />
-                          Read
-                        </button>
-                      )}
-
+                    {!notification.isRead && (
                       <button
+                        type="button"
                         onClick={() =>
-                          handleDelete(
+                          handleMarkAsRead(
                             notification._id
                           )
                         }
@@ -614,18 +566,36 @@ function Notifications() {
                           processingId ===
                           notification._id
                         }
-                        title="Delete notification"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 transition hover:border-red-200 hover:bg-red-50 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+                        title="Mark as read"
+                        className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600 disabled:cursor-not-allowed disabled:opacity-50"
                       >
-                        <FiTrash2 size={15} />
+                        <FiCheck size={14} />
+                        Read
                       </button>
+                    )}
 
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDelete(
+                          notification._id
+                        )
+                      }
+                      disabled={
+                        processingId ===
+                        notification._id
+                      }
+                      title="Delete notification"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 transition hover:border-red-200 hover:bg-red-50 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <FiTrash2 size={15} />
+                    </button>
 
                   </div>
-                );
-              }
-            )}
+
+                </div>
+              );
+            })}
 
           </div>
         )}
