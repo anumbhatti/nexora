@@ -27,7 +27,7 @@ function ManagerTopbar({ onMenuClick }) {
   const fetchNotifications = async () => {
     try {
       const response = await api.get(
-        `/api/notifications?_t=${Date.now()}`
+        `/notifications?_t=${Date.now()}`
       );
 
       if (response.data.success) {
@@ -87,7 +87,7 @@ function ManagerTopbar({ onMenuClick }) {
   const markAsRead = async (notificationId) => {
     try {
       await api.patch(
-        `/api/notifications/${notificationId}/read`
+        `/notifications/${notificationId}/read`
       );
 
       setNotifications((prev) =>
